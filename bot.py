@@ -2,7 +2,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler 
 from aiohttp import web 
  
-bot = Bot(token="YOUR_BOT_TOKEN") 
+bot = Bot(token="7250623185:AAHVlFPvR5ypisUnngoJ7hhI_6NmyfTDj0Q") 
 dp = Dispatcher(bot) 
  
 @dp.message_handler(commands=['start']) 
