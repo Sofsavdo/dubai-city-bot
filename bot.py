@@ -1,12 +1,12 @@
-from aiogram import Bot, Dispatcher, types, F
+from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler
 from aiohttp import web
 
-bot = Bot(token="7250623185:AAHVlFPvR5ypisUnngoJ7hhI_6NmyfTDj0Q")
+bot = Bot(token="7250623185:AAHjyHuQoiRo90Ix3NrEhrSvqF4HrfaexYw")
 dp = Dispatcher()
 
-# Handlerlarni registratsiya qilish
+# Yangi usulda handler registratsiyasi
 @dp.message(Command("start"))
 async def start_handler(message: types.Message):
     await message.answer("🚀 Dubai City Bot ishga tushdi!")
