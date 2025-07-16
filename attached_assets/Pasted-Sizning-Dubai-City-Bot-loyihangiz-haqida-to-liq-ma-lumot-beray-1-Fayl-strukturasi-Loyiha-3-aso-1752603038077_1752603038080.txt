@@ -1,0 +1,644 @@
+Sizning Dubai City Bot loyihangiz haqida to'liq ma'lumot beray:
+
+1. Fayl strukturasi
+Loyiha 3 asosiy qismdan iborat:
+
+Client qismi (React Frontend):
+
+client/src/pages/ - Asosiy sahifalar
+client/src/components/ - React komponentlari
+client/src/hooks/ - Custom React hooks
+client/src/services/ - API xizmatlari
+client/src/data/ - Statik ma'lumotlar
+client/src/utils/ - Yordamchi funksiyalar
+Server qismi (Express.js Backend):
+
+server/index.ts - Asosiy server
+server/routes.ts - API marshrutlari
+server/db.ts - Database ulanishi
+server/bot.ts - Telegram bot
+server/storage.ts - Ma'lumotlar saqlash
+Shared qismi:
+
+shared/schema.ts - Database schema (Drizzle ORM)
+2. O'yin ekranlari
+Asosiy navigatsiya:
+Imperiya (MyCity) - Asosiy o'yin ekrani
+Bozor (Marketplace) - Biznes sotib olish
+Loyihalar (Projects) - Topshiriqlar va daily rewards
+Aktivlar (Assets) - Birja, scratch card o'yinlari
+Hamjamiyat (Community) - Leaderboard va jamoa
+Profil (Profile) - Foydalanuvchi profili
+Har bir ekranning tafsiloti:
+MyCity (Imperiya):
+
+Tap to earn asosiy o'yin
+Balans va level ko'rsatish
+Energy va boost tizimi
+Daily rewards
+Marketplace (Bozor):
+
+Biznes ob'ektlarini sotib olish
+Biznes kartalarini upgrade qilish
+Soatlik daromad hisobotlari
+Projects (Loyihalar):
+
+Kunlik mukofotlar (12 kun)
+Topshiriqlar ro'yxati
+Mukofotlarni olish
+3. Komponentlar
+Asosiy komponentlar:
+Common komponentlar:
+
+// client/src/components/Common/BalanceDisplay.tsx
+import React from 'react';
+import { formatNumberShort } from '../../utils/helpers';
+interface BalanceDisplayProps {
+  balance: number;
+  className?: string;
+}
+const BalanceDisplay: React.FC<BalanceDisplayProps> = ({ balance, className = '' }) => {
+  return (
+    <div className={`balance-display ${className}`}>
+      <span className="balance-icon">🪙</span>
+      <span className="balance-amount">{formatNumberShort(balance)}</span>
+    </div>
+  );
+};
+export default BalanceDisplay;
+Nav komponentlari:
+
+// client/src/components/Nav/Nav.tsx
+import React from 'react';
+import NavButton from './NavButton';
+interface NavProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
+const Nav: React.FC<NavProps> = ({ activeTab, onTabChange }) => {
+  const tabs = [
+    { id: 'Imperiya', label: 'Imperiya', icon: '🏙️' },
+    { id: 'Bozor', label: 'Bozor', icon: '🏪' },
+    { id: 'Loyihalar', label: 'Loyihalar', icon: '📋' },
+    { id: 'Aktivlar', label: 'Aktivlar', icon: '💎' },
+    { id: 'Hamjamiyat', label: 'Hamjamiyat', icon: '👥' },
+    { id: 'Profil', label: 'Profil', icon: '👤' }
+  ];
+  return (
+    <nav className="bottom-nav">
+      {tabs.map(tab => (
+        <NavButton
+          key={tab.id}
+          id={tab.id}
+          label={tab.label}
+          icon={tab.icon}
+          active={activeTab === tab.id}
+          onClick={() => onTabChange(tab.id)}
+        />
+      ))}
+    </nav>
+  );
+};
+export default Nav;
+4. API chaqiruvlari
+API endpoints:
+Game API:
+
+// client/src/services/api.ts
+const API_BASE = '/api';
+export const gameAPI = {
+  // Foydalanuvchi ma'lumotlarini olish
+  getUser: (telegramId: string) => 
+    fetch(`${API_BASE}/game/user/${telegramId}`).then(res => res.json()),
+  
+  // Tap action
+  tap: (telegramId: string, amount: number) =>
+    fetch(`${API_BASE}/game/tap`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegramId, amount })
+    }).then(res => res.json()),
+  
+  // Biznes sotib olish
+  buyBusiness: (telegramId: string, businessId: number) =>
+    fetch(`${API_BASE}/game/business/buy`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegramId, businessId })
+    }).then(res => res.json()),
+  
+  // Daily reward olish
+  claimDailyReward: (telegramId: string, day: number) =>
+    fetch(`${API_BASE}/game/daily-reward`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegramId, day })
+    }).then(res => res.json())
+};
+Server API routes:
+
+// server/routes.ts
+import express from 'express';
+import { gameAPI } from './api/game';
+const router = express.Router();
+// Game routes
+router.get('/game/user/:telegramId', gameAPI.getUser);
+router.post('/game/tap', gameAPI.tap);
+router.post('/game/business/buy', gameAPI.buyBusiness);
+router.post('/game/daily-reward', gameAPI.claimDailyReward);
+router.get('/game/leaderboard', gameAPI.getLeaderboard);
+// Tasks routes
+router.get('/tasks', gameAPI.getTasks);
+router.post('/tasks/complete', gameAPI.completeTask);
+// Promo codes
+router.post('/promo/redeem', gameAPI.redeemPromoCode);
+export default router;
+5. Telegram WebApp integratsiyasi
+Telegram SDK:
+// client/src/lib/telegram.ts
+declare global {
+  interface Window {
+    Telegram?: {
+      WebApp: {
+        initData: string;
+        initDataUnsafe: any;
+        user?: {
+          id: number;
+          username?: string;
+          first_name?: string;
+          last_name?: string;
+        };
+        ready: () => void;
+        close: () => void;
+        expand: () => void;
+        showAlert: (message: string) => void;
+        showConfirm: (message: string, callback: (confirmed: boolean) => void) => void;
+        hapticFeedback: {
+          impactOccurred: (style: 'light' | 'medium' | 'heavy') => void;
+          notificationOccurred: (type: 'error' | 'success' | 'warning') => void;
+        };
+      };
+    };
+  }
+}
+export const initTelegram = () => {
+  if (window.Telegram?.WebApp) {
+    window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.expand();
+    return window.Telegram.WebApp;
+  }
+  return null;
+};
+export const getTelegramUser = () => {
+  return window.Telegram?.WebApp?.user || null;
+};
+Hook for Telegram:
+// client/src/hooks/use-telegram.tsx
+import { useState, useEffect } from 'react';
+import { initTelegram, getTelegramUser } from '../lib/telegram';
+export const useTelegram = () => {
+  const [webApp, setWebApp] = useState<any>(null);
+  const [user, setUser] = useState<any>(null);
+  useEffect(() => {
+    const app = initTelegram();
+    setWebApp(app);
+    setUser(getTelegramUser());
+  }, []);
+  return { webApp, user };
+};
+6. O'yin mexanikasi
+Coin tizimi:
+// client/src/utils/helpers.ts
+export const formatNumberShort = (num: number): string => {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M';
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'K';
+  }
+  return num.toString();
+};
+export const calculateTapPower = (level: number, upgrades: any) => {
+  let basePower = 1;
+  // Level bonus
+  basePower += Math.floor(level / 5);
+  // Upgrade bonus
+  if (upgrades.tapPower) {
+    basePower *= upgrades.tapPower;
+  }
+  return basePower;
+};
+Tap to earn:
+// client/src/pages/MyCity/index.tsx
+const handleTap = useCallback(async (e: React.MouseEvent) => {
+  if (gameData.user.energy < 1) return;
+  const tapPower = calculateTapPower(gameData.user.level, gameData.user.upgrades);
+  
+  try {
+    const response = await gameAPI.tap(gameData.user.telegramId, tapPower);
+    
+    if (response.success) {
+      // Update local state
+      setGameData(prev => ({
+        ...prev,
+        user: {
+          ...prev.user,
+          dubaiCoin: prev.user.dubaiCoin + tapPower,
+          energy: prev.user.energy - 1
+        }
+      }));
+      
+      // Haptic feedback
+      if (webApp?.hapticFeedback) {
+        webApp.hapticFeedback.impactOccurred('light');
+      }
+    }
+  } catch (error) {
+    console.error('Tap failed:', error);
+  }
+}, [gameData.user, webApp]);
+Level tizimi:
+// client/src/data/initialData.ts
+export const levelThresholds = [
+  { level: 1, required: 0, name: 'Yangi boshlovchi' },
+  { level: 2, required: 10000, name: 'Kichik biznesmen' },
+  { level: 3, required: 50000, name: 'Tadbirkor' },
+  { level: 4, required: 100000, name: 'Investor' },
+  { level: 5, required: 500000, name: 'Biznes magnati' },
+  { level: 6, required: 1000000, name: 'Millioner' },
+  { level: 7, required: 5000000, name: 'Multi-millioner' },
+  { level: 8, required: 10000000, name: 'Oligarx' },
+  { level: 9, required: 50000000, name: 'Biznes imperatori' },
+  { level: 10, required: 100000000, name: 'Boylik shohi' },
+  { level: 11, required: 500000000, name: 'Jahon boylik lider' },
+  { level: 12, required: 1000000000, name: 'Boylik ustozi' },
+  { level: 13, required: 5000000000, name: 'Omnipotent' },
+  { level: 14, required: 10000000000, name: 'Dubai King' }
+];
+export const getCurrentLevel = (coins: number) => {
+  for (let i = levelThresholds.length - 1; i >= 0; i--) {
+    if (coins >= levelThresholds[i].required) {
+      return levelThresholds[i];
+    }
+  }
+  return levelThresholds[0];
+};
+7. Foydalanuvchi ma'lumotlari
+Database schema:
+// shared/schema.ts
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  telegramId: text("telegram_id").unique(),
+  username: text("username").notNull(),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  dubaiCoin: integer("dubai_coin").default(1000),
+  tapProfit: integer("tap_profit").default(1),
+  hourlyIncome: integer("hourly_income").default(0),
+  level: integer("level").default(1),
+  energy: integer("energy").default(5000),
+  maxEnergy: integer("max_energy").default(5000),
+  boost: integer("boost").default(0),
+  maxBoost: integer("max_boost").default(3),
+  energyRefill: integer("energy_refill").default(5),
+  maxEnergyRefill: integer("max_energy_refill").default(5),
+  currentAvatar: text("current_avatar"),
+  premiumStatus: boolean("premium_status").default(false),
+  premiumUntil: timestamp("premium_until"),
+  selectedAppearance: json("selected_appearance"),
+  lastDailyReward: timestamp("last_daily_reward"),
+  dailyStreak: integer("daily_streak").default(0),
+  referralCode: text("referral_code").unique(),
+  referredBy: integer("referred_by"),
+  createdAt: timestamp("created_at").defaultNow(),
+  lastActive: timestamp("last_active").defaultNow(),
+});
+8. Topshiriqlar tizimi
+Tasks schema:
+export const tasks = pgTable("tasks", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  titleUz: text("title_uz"),
+  titleRu: text("title_ru"),
+  description: text("description"),
+  type: text("type").notNull(), // 'telegram', 'youtube', 'instagram', 'twitter'
+  url: text("url"),
+  reward: integer("reward").notNull(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+export const userTasks = pgTable("user_tasks", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  taskId: integer("task_id").references(() => tasks.id).notNull(),
+  completedAt: timestamp("completed_at").defaultNow(),
+  rewardClaimed: boolean("reward_claimed").default(false),
+});
+Task completion:
+// server/api/game.ts
+export const completeTask = async (req: Request, res: Response) => {
+  const { telegramId, taskId } = req.body;
+  
+  try {
+    const user = await db.select().from(users).where(eq(users.telegramId, telegramId)).limit(1);
+    if (!user.length) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    const task = await db.select().from(tasks).where(eq(tasks.id, taskId)).limit(1);
+    if (!task.length) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+    
+    // Check if already completed
+    const existingCompletion = await db.select()
+      .from(userTasks)
+      .where(and(eq(userTasks.userId, user[0].id), eq(userTasks.taskId, taskId)))
+      .limit(1);
+    
+    if (existingCompletion.length > 0) {
+      return res.status(400).json({ error: 'Task already completed' });
+    }
+    
+    // Complete task
+    await db.insert(userTasks).values({
+      userId: user[0].id,
+      taskId: taskId,
+      rewardClaimed: true
+    });
+    
+    // Give reward
+    await db.update(users)
+      .set({ 
+        dubaiCoin: user[0].dubaiCoin + task[0].reward 
+      })
+      .where(eq(users.id, user[0].id));
+    
+    res.json({ success: true, reward: task[0].reward });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+9. Referral tizimi
+Referral generation:
+// client/src/utils/helpers.ts
+export const generateReferralCode = (telegramId: string): string => {
+  return `REF_${telegramId}_${Date.now().toString().slice(-6)}`;
+};
+export const getReferralLink = (referralCode: string): string => {
+  return `https://t.me/DubaiCITY_robot?start=${referralCode}`;
+};
+Referral reward:
+// server/api/game.ts
+export const processReferral = async (referrerCode: string, newUserId: number) => {
+  try {
+    const referrer = await db.select()
+      .from(users)
+      .where(eq(users.referralCode, referrerCode))
+      .limit(1);
+    
+    if (referrer.length > 0) {
+      // Reward referrer
+      await db.update(users)
+        .set({ 
+          dubaiCoin: referrer[0].dubaiCoin + 5000 
+        })
+        .where(eq(users.id, referrer[0].id));
+      
+      // Set referral relationship
+      await db.update(users)
+        .set({ 
+          referredBy: referrer[0].id,
+          dubaiCoin: 3000 // Bonus for new user
+        })
+        .where(eq(users.id, newUserId));
+    }
+  } catch (error) {
+    console.error('Referral processing failed:', error);
+  }
+};
+10. Skinlar va do'kon
+Skins schema:
+export const skins = pgTable("skins", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  nameUz: text("name_uz"),
+  nameRu: text("name_ru"),
+  description: text("description"),
+  price: integer("price").notNull(),
+  rarity: text("rarity").notNull(), // 'common', 'rare', 'epic', 'legendary'
+  imageUrl: text("image_url"),
+  category: text("category"), // 'character', 'weapon', 'background'
+});
+export const userSkins = pgTable("user_skins", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  skinId: integer("skin_id").references(() => skins.id).notNull(),
+  purchasedAt: timestamp("purchased_at").defaultNow(),
+  isEquipped: boolean("is_equipped").default(false),
+});
+Skin purchase:
+// server/api/game.ts
+export const buySkin = async (req: Request, res: Response) => {
+  const { telegramId, skinId } = req.body;
+  
+  try {
+    const user = await db.select().from(users).where(eq(users.telegramId, telegramId)).limit(1);
+    const skin = await db.select().from(skins).where(eq(skins.id, skinId)).limit(1);
+    
+    if (!user.length || !skin.length) {
+      return res.status(404).json({ error: 'User or skin not found' });
+    }
+    
+    if (user[0].dubaiCoin < skin[0].price) {
+      return res.status(400).json({ error: 'Insufficient funds' });
+    }
+    
+    // Purchase skin
+    await db.insert(userSkins).values({
+      userId: user[0].id,
+      skinId: skinId,
+      isEquipped: true
+    });
+    
+    // Deduct coins
+    await db.update(users)
+      .set({ 
+        dubaiCoin: user[0].dubaiCoin - skin[0].price,
+        currentAvatar: skin[0].imageUrl
+      })
+      .where(eq(users.id, user[0].id));
+    
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+11. Promo kodlar
+Promo code system:
+export const promoCodes = pgTable("promo_codes", {
+  id: serial("id").primaryKey(),
+  code: text("code").notNull().unique(),
+  reward: integer("reward").notNull(),
+  usageLimit: integer("usage_limit"),
+  usedCount: integer("used_count").default(0),
+  expiresAt: timestamp("expires_at"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+export const promoCodeUsage = pgTable("promo_code_usage", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  promoCodeId: integer("promo_code_id").references(() => promoCodes.id).notNull(),
+  usedAt: timestamp("used_at").defaultNow(),
+});
+Promo code redemption:
+// server/api/game.ts
+export const redeemPromoCode = async (req: Request, res: Response) => {
+  const { telegramId, code } = req.body;
+  
+  try {
+    const user = await db.select().from(users).where(eq(users.telegramId, telegramId)).limit(1);
+    const promo = await db.select().from(promoCodes).where(eq(promoCodes.code, code)).limit(1);
+    
+    if (!user.length || !promo.length) {
+      return res.status(404).json({ error: 'Invalid promo code' });
+    }
+    
+    // Check if already used
+    const existingUsage = await db.select()
+      .from(promoCodeUsage)
+      .where(and(
+        eq(promoCodeUsage.userId, user[0].id),
+        eq(promoCodeUsage.promoCodeId, promo[0].id)
+      ))
+      .limit(1);
+    
+    if (existingUsage.length > 0) {
+      return res.status(400).json({ error: 'Promo code already used' });
+    }
+    
+    // Check usage limit
+    if (promo[0].usageLimit && promo[0].usedCount >= promo[0].usageLimit) {
+      return res.status(400).json({ error: 'Promo code usage limit reached' });
+    }
+    
+    // Redeem
+    await db.insert(promoCodeUsage).values({
+      userId: user[0].id,
+      promoCodeId: promo[0].id
+    });
+    
+    await db.update(users)
+      .set({ 
+        dubaiCoin: user[0].dubaiCoin + promo[0].reward 
+      })
+      .where(eq(users.id, user[0].id));
+    
+    await db.update(promoCodes)
+      .set({ 
+        usedCount: promo[0].usedCount + 1 
+      })
+      .where(eq(promoCodes.id, promo[0].id));
+    
+    res.json({ success: true, reward: promo[0].reward });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+12. To'lov tizimi (TON Wallet)
+Payment Handler:
+// client/src/components/Common/PaymentHandler.tsx
+export const PAYMENT_CONFIGS = {
+  PREMIUM: {
+    price: 5, // TON
+    title: 'Premium Obuna',
+    description: '30 kun premium obuna',
+    benefits: ['2x tezroq coin yig\'ish', 'Maxsus avatarlar', 'Premium support']
+  },
+  ENERGY_BOOST: {
+    price: 1,
+    title: 'Energy Boost',
+    description: 'Maksimal energiya',
+    benefits: ['To\'liq energiya', 'Instant refill']
+  }
+};
+export class PaymentHandler {
+  static async initiateTONPayment(amount: number, description: string) {
+    // TON Connect integration
+    const tonConnectUI = new TonConnectUI();
+    
+    const transaction = {
+      validUntil: Date.now() + 5 * 60 * 1000, // 5 minutes
+      messages: [
+        {
+          address: ADMIN_WALLET_ADDRESS,
+          amount: (amount * 1000000000).toString(), // Convert to nanoTON
+          payload: description
+        }
+      ]
+    };
+    
+    try {
+      const result = await tonConnectUI.sendTransaction(transaction);
+      return result;
+    } catch (error) {
+      console.error('Payment failed:', error);
+      throw error;
+    }
+  }
+}
+Payment Modal:
+// client/src/components/Common/PaymentModal.tsx
+import React, { useState } from 'react';
+import { PaymentHandler, PAYMENT_CONFIGS } from './PaymentHandler';
+interface PaymentModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  paymentType: keyof typeof PAYMENT_CONFIGS;
+  onSuccess: () => void;
+}
+const PaymentModal: React.FC<PaymentModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  paymentType, 
+  onSuccess 
+}) => {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const config = PAYMENT_CONFIGS[paymentType];
+  const handlePayment = async () => {
+    setIsProcessing(true);
+    try {
+      await PaymentHandler.initiateTONPayment(config.price, config.description);
+      onSuccess();
+      onClose();
+    } catch (error) {
+      console.error('Payment failed:', error);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+  if (!isOpen) return null;
+  return (
+    <div className="payment-modal">
+      <div className="modal-content">
+        <h3>{config.title}</h3>
+        <p>{config.description}</p>
+        <div className="price">{config.price} TON</div>
+        <div className="benefits">
+          {config.benefits.map((benefit, index) => (
+            <div key={index} className="benefit">✓ {benefit}</div>
+          ))}
+        </div>
+        <div className="modal-actions">
+          <button onClick={onClose} disabled={isProcessing}>
+            Bekor qilish
+          </button>
+          <button onClick={handlePayment} disabled={isProcessing}>
+            {isProcessing ? 'Kutilmoqda...' : 'To\'lash'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+export default PaymentModal;

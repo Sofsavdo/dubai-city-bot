@@ -1,0 +1,183 @@
+Sizning Dubai City Bot Admin Panel loyihangiz haqida to'liq ma'lumot:
+
+1. 📁 Fayl Strukturasi
+admin-panel/
+├── src/
+│   ├── components/           # Barcha React komponentlari
+│   │   ├── Dashboard.tsx     # Asosiy sahifa - statistikalar
+│   │   ├── UsersManagement.tsx     # O'yinchilar boshqaruvi
+│   │   ├── TasksManagement.tsx     # Vazifalar boshqaruvi  
+│   │   ├── EmpireManagement.tsx    # Imperiya darajalari
+│   │   ├── SkinsManagement.tsx     # Skinlar va ko'rinish
+│   │   ├── MarketManagement.tsx    # Bozor va xaridlar
+│   │   ├── NotificationsManagement.tsx  # Bildirishnomalar
+│   │   ├── TeamManagement.tsx      # Jamoa/Kompaniya
+│   │   ├── AssetsManagement.tsx    # Promo kodlar
+│   │   ├── PromoCodesManagement.tsx # Chegirma kodlari
+│   │   ├── ProjectsManagement.tsx  # Kunlik vazifalar
+│   │   ├── ReportsManagement.tsx   # Hisobotlar
+│   │   ├── StatisticsManagement.tsx # Statistika
+│   │   ├── PricesManagement.tsx    # Narxlar boshqaruvi
+│   │   ├── ProfileManagement.tsx   # Bot profili
+│   │   ├── Settings.tsx            # Sozlamalar
+│   │   ├── Header.tsx              # Yuqori panel
+│   │   └── Sidebar.tsx             # Yon menyu
+│   ├── hooks/
+│   │   └── useApi.ts              # API so'rovlar uchun hook
+│   ├── lib/
+│   │   └── api.ts                 # API xizmatlari
+│   ├── App.tsx                    # Asosiy aplikatsiya
+│   └── main.tsx                   # Kirish nuqtasi
+├── shared/
+│   └── schema.ts                  # Ma'lumotlar bazasi sxemasi
+├── server/                        # Backend xizmatlari
+├── package.json                   # Bog'liqliklar
+└── vite.config.ts                # Build sozlamalari
+2. 🎯 React Komponentlari
+Asosiy Komponentlar:
+Dashboard: Umumiy statistika va hisobotlar
+UsersManagement: O'yinchilar ro'yxati, bloklash, xabar yuborish
+TasksManagement: Ijtimoiy tarmoq vazifalari yaratish/tahrirlash
+EmpireManagement: 14 ta imperiya darajasi boshqaruvi
+SkinsManagement: Kosmetik elementlar va tashqi ko'rinish
+MarketManagement: O'yin ichidagi xaridlar va biznes elementlari
+Qo'shimcha Komponentlar:
+NotificationsManagement: Push bildirishnomalar
+TeamManagement: Jamoa funksiyalari
+PromoCodesManagement: Promocod tizimi
+Settings: Bot sozlamalari va konfiguratsiya
+3. 🔗 API Chaqiruvlari
+Backend Endpoint'lari:
+// API Base URL
+const API_BASE_URL = 'https://localhost:3000'
+// Asosiy endpoint'lar
+/api/admin/stats          // Dashboard statistikalari
+/api/admin/users          // O'yinchilar boshqaruvi  
+/api/admin/tasks          // Vazifalar CRUD
+/api/admin/skins          // Skinlar boshqaruvi
+/api/admin/businesses     // Biznes elementlar
+/api/admin/promocodes     // Promo kodlar
+/api/admin/notifications  // Bildirishnomalar
+/api/admin/empire-levels  // Imperiya darajalari
+HTTP Metodlari:
+GET: Ma'lumotlarni olish (ro'yxat, detallar)
+POST: Yangi element yaratish
+PUT: Mavjud elementni yangilash
+DELETE: Element o'chirish
+4. 📊 Ma'lumotlar Formati
+O'yinchi Ma'lumotlari:
+{
+  "id": 1,
+  "telegramId": "123456789",
+  "username": "admin_user",
+  "firstName": "Admin", 
+  "lastName": "User",
+  "dubaiCoin": 100000,
+  "tapProfit": 5,
+  "hourlyIncome": 1000,
+  "level": 10,
+  "energy": 5000,
+  "maxEnergy": 5000,
+  "premiumStatus": true,
+  "referralCode": "ADMIN001",
+  "language": "uz"
+}
+Vazifa Ma'lumotlari:
+{
+  "id": 1,
+  "title": "Instagram obuna",
+  "titleUz": "Instagram obuna", 
+  "titleRu": "Подписаться на Instagram",
+  "description": "Instagram sahifamizni kuzatib boring",
+  "type": "instagram",
+  "url": "https://instagram.com/dubaicitybot",
+  "reward": 500,
+  "isActive": true
+}
+5. 📄 Sahifalar
+Dashboard - Umumiy ko'rinish va statistika
+O'yinchilar - Foydalanuvchilar boshqaruvi
+Vazifalar - Ijtimoiy tarmoq vazifalari
+Imperiya - O'yin darajalari tizimi
+Skinlar - Kosmetik elementlar
+Bozor - Biznes va xarid elementlari
+Bildirishnomalar - Push xabarlar
+Jamoa - Kompaniya funksiyalari
+Aktivlar - Promo kodlar va YouTube vazifalari
+Loyihalar - Kunlik vazifalar
+Hisobotlar - Analitika va eksport
+Statistika - Performance ko'rsatkichlari
+Narxlar - Iqtisodiy balans
+Profil - Bot sozlamalari
+Sozlamalar - Umumiy konfiguratsiya
+6. 📝 Formalar
+O'yinchi Yaratish/Tahrirlash:
+Telegram ID, username, ism-familiya
+Dubai Coin balansi, darajasi
+Premium status, til sozlamalari
+Vazifa Qo'shish:
+Ko'p tilli sarlavha (UZ/RU/EN)
+Tavsif, rasm, havola
+Mukofot miqdori, turi (Instagram/YouTube/Telegram)
+Faollik holati
+Skin Yaratish:
+Ko'p tilli nom va tavsif
+Narx, kamyoblik darajasi (oddiy/noyob/epik/afsonaviy)
+Kategoriya, rasm URL
+7. 📋 Jadvallar va Ustunlar
+O'yinchilar Jadvali:
+Ism, Username, Telegram ID
+Dubai Coin, Daraja, Energiya
+Premium Status, Til
+Oxirgi faollik, Ro'yxatdan o'tish sanasi
+Vazifalar Jadvali:
+Sarlavha (UZ/RU), Turi, Mukofot
+Havola, Status, Bajarilgan soni
+Yaratilgan sana, Oxirgi yangilanish
+Skinlar Jadvali:
+Nom, Kategoriya, Kamyoblik
+Narx, Faollik, Rasm
+Sotilgan soni, Reytingi
+8. 🔍 Filtrlash va Qidiruv
+O'yinchilar:
+Status bo'yicha (faol/bloklangan/barcha)
+Daraja oralig'i
+Ro'yxatdan o'tish sanasi
+Mamlakat, til
+Vazifalar:
+Turi bo'yicha (Instagram/YouTube/Telegram)
+Status (faol/nofaol)
+Mukofot oralig'i
+Yaratilgan sana
+Umumiy Qidiruv:
+Nom, username, ID bo'yicha
+Real-time qidiruv
+Kengaytirilgan filtrlar
+9. 📖 Paginatsiya
+// API dan ma'lumot olish
+const response = await fetch('/api/admin/users?page=1&limit=50');
+// Sahifalash sozlamalari
+- Har sahifada: 50 ta element
+- Sahifa raqamlari: 1, 2, 3...
+- Jami elementlar soni ko'rsatiladi
+- Oldingi/Keyingi tugmalari
+10. 🔐 Autentifikatsiya
+Hozirda admin panel ochiq, lekin kelajakda:
+
+Admin login/parol tizimi
+JWT token autentifikatsiya
+Rol-ga asoslangan ruxsatlar
+Session boshqaruvi
+Xavfsizlik Xususiyatlari:
+Client/Server ajratilishi
+API endpoint himoyasi
+Ma'lumotlar validatsiyasi
+XSS va CSRF himoya
+⚙️ Texnik Ma'lumotlar
+Frontend: React 18 + TypeScript
+Styling: Tailwind CSS
+Build Tool: Vite 6.3.5
+Icons: Lucide React
+Database: PostgreSQL + Drizzle ORM
+Deployment: Replit (port 5000)
+Loyiha to'liq ishga tushirilgan va foydalanishga tayyor! Barcha komponentlar, formalar va jadvallar ishlaydi. Backend API'lar mock ma'lumotlar bilan konfiguratsiya qilingan.

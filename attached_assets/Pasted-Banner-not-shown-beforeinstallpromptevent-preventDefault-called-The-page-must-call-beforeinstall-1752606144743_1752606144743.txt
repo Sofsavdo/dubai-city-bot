@@ -1,0 +1,39 @@
+Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+stallwart.build.js:1 stallwart: failed ping 1
+ Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+_ @ framework-99fb57bf82d5585b.js:1
+(анонимная) @ framework-99fb57bf82d5585b.js:1
+uD @ framework-99fb57bf82d5585b.js:1
+uI @ framework-99fb57bf82d5585b.js:1
+uM @ framework-99fb57bf82d5585b.js:1
+uS @ framework-99fb57bf82d5585b.js:1
+C @ framework-99fb57bf82d5585b.js:1
+z @ framework-99fb57bf82d5585b.js:1Пояснение к ошибке
+DubaiCityServer:1 Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users. Avoid using aria-hidden on a focused element or its ancestor. Consider using the inert attribute instead, which will also prevent focus. For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+Element with focus: <button. useView_view__C2mnv useView_isHorizontal__Q1YOp Tab_tabButton__2m0lS#tab-d71aeba4-a6b2-47cc-967c-dee0c371b11b>
+Ancestor with aria-hidden: <div#__next> <div id=​"__next">​…​</div>​Пояснение к предупреждению
+stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+stallwart.build.js:1 stallwart: failed ping 4
+stallwart.build.js:1 stallwart: failed ping 5
+stallwart.build.js:1 stallwart: session stalled
+ WebSocket connection to 'wss://eval.sisko.platform.replit.com/wsv2/v2.public.Q2dZSTk2cmF3d1lTQmdpV3g5ckRCaUlGYzJsemEyOHdBRHJTQVFva09HRmhOalptTkdNdE5qWXlNQzAwWlRFNExXSmpZVEF0TURRNVpHRmxORFV6TnpJMEVnTnVhWGdhRjNKbGNHeHBkQzF5WlhCc0xXWnBiR1Z6TFhOcGMydHZJZzlFZFdKaGFVTnBkSGxUWlhKMlpYSXFDbkJwY205dU5qTXdNVE5DVVFvWWNtVndiR2wwTFhKbGNHd3RZbXh2WTJ0ekxYTnBjMnR2RWhaeVpYQnNhWFF0Y21Wd2JDMXRaWFJoTFhOcGMydHZHaDF5WlhCc2FYUXRiV0Z5WjJGeWFXNWxMV0pzYjJOcmN5MXphWE5yYjBvSENMZXp2eFVRQVZBQVdnOXBiblJsYm5SZmNHVnljMjl1WVd4NEFGSWtDQUVRZ0lDQWdBZ1pBQUFBQUFBQThEOGhBQUFBQUFBQThEOG9nSUNBZ0Fnd0FUZ0FZQUJxRVFpM3M3OFZFZ3B3YVhKdmJqWXpNREV6Z2dFQ0tnQ2FBUW9LQ0RBdU1DNHhOVEF4b0FFQa1JIN-TZNNxbjZa0DpXS8BuFxldgOFdNCPY0AcbdmrsFUQ511FfCVjebvfAEq3O0eQruwx0YHzhGTT3OCMJoww.Q2dad2NtOWtPak1pQ25KbGNHeHBkQzVqYjIwPQ' failed: 
+connect @ 102-411d9decad437c73.js:1Пояснение к ошибке
+ WebSocket connection to 'wss://eval.sisko.platform.replit.com/wsv2/v2.public.Q2dZSStjcmF3d1lTQmdpWTU5ckRCaUlGYzJsemEyOHdBRHJTQVFva09HRmhOalptTkdNdE5qWXlNQzAwWlRFNExXSmpZVEF0TURRNVpHRmxORFV6TnpJMEVnTnVhWGdhRjNKbGNHeHBkQzF5WlhCc0xXWnBiR1Z6TFhOcGMydHZJZzlFZFdKaGFVTnBkSGxUWlhKMlpYSXFDbkJwY205dU5qTXdNVE5DVVFvWWNtVndiR2wwTFhKbGNHd3RZbXh2WTJ0ekxYTnBjMnR2RWhaeVpYQnNhWFF0Y21Wd2JDMXRaWFJoTFhOcGMydHZHaDF5WlhCc2FYUXRiV0Z5WjJGeWFXNWxMV0pzYjJOcmN5MXphWE5yYjBvSENMZXp2eFVRQVZBQVdnOXBiblJsYm5SZmNHVnljMjl1WVd4NEFGSWtDQUVRZ0lDQWdBZ1pBQUFBQUFBQThEOGhBQUFBQUFBQThEOG9nSUNBZ0Fnd0FUZ0FZQUJxRVFpM3M3OFZFZ3B3YVhKdmJqWXpNREV6Z2dFQ0tnQ2FBUW9LQ0RBdU1DNHhOVEF4b0FFQezSO_TvKjR7zhCNt1lDHEC3W6tcYcgo2oToJ18MhRRmqF1k1-i8UNpo-oaeLcZGdQBMeQP3-ndx90mZ-D_wrAU.Q2dad2NtOWtPak1pQ25KbGNHeHBkQzVqYjIwPQ' failed: WebSocket is closed before the connection is established.
+cleanupSocket @ 102-411d9decad437c73.js:1Пояснение к предупреждению
+/data/repls/8aa66f4c-6620-4e18-bca0-049dae453724/get_connection_metadata:1  Failed to load resource: net::ERR_CONNECTION_CLOSEDПояснение к ошибке
+/data/repls/8aa66f4c-6620-4e18-bca0-049dae453724/get_connection_metadata:1  Failed to load resource: net::ERR_CONNECTION_CLOSEDПояснение к ошибке
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A42fe5020&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=1533cdfc-9ba6-46b1-88d3-649f1d79e0ac:1  Failed to load resource: net::ERR_INTERNET_DISCONNECTEDПояснение к ошибке
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A42fe5020&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=2bb0c287-6e45-46c3-a3cc-6e2ec72515ea:1  Failed to load resource: net::ERR_INTERNET_DISCONNECTEDПояснение к ошибке
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_INTERNET_DISCONNECTEDПояснение к ошибке
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_INTERNET_DISCONNECTEDПояснение к ошибке
+ WebSocket connection to 'wss://replit.com/graphql_subscriptions' failed: 
+(анонимная) @ _app-8bd4bdfb6eecb562.js:25Пояснение к ошибке
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A42fe5020%2Cretry_count%3A1%2Cretry_after%3A0&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=311fbf1f-7e6d-409b-88ae-537f9aeef992:1  Failed to load resource: net::ERR_INTERNET_DISCONNECTEDПояснение к ошибке
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A42fe5020%2Cretry_count%3A1%2Cretry_after%3A0&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=dbf459c3-cd14-43f4-9163-91fef9bbc90e:1  Failed to load resource: net::ERR_INTERNET_DISCONNECTEDПояснение к ошибке
+3_app-8bd4bdfb6eecb562.js:38 Uncaught TypeError: Cannot read properties of undefined (reading 'dimensions')
+    at get dimensions (cdn.replit.com/_next/static/chunks/1c7fb644.48f130894db56aa1.js:3:88240)
+    at t.Viewport.syncScrollArea (cdn.replit.com/_next/static/chunks/1c7fb644.48f130894db56aa1.js:3:30815)
+    at cdn.replit.com/_next/static/chunks/1c7fb644.48f130894db56aa1.js:3:29461
+    at n (_app-8bd4bdfb6eecb562.js:38:2959)
